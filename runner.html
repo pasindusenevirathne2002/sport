@@ -1,0 +1,158 @@
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Runner</title>
+    <style>
+
+        *{
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        }
+
+        .container{
+            margin: auto;
+        }
+
+        .dataEntrySection{
+            display: flex;
+            flex-direction: column;
+            margin: 10px;
+            align-items:flex-start;
+            justify-content: space-between;
+        }
+
+        .EntryGroup{
+            padding: 10px;
+        }
+
+        .EntryGroup > label  {
+            padding-right: 15px;
+        }
+
+        .reportSection{
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="dataEntrySection">
+            <h4>Data Input</h4>
+
+            <div class="EntryGroup">
+                <Label for="runnerName">Runner Name</Label>
+                <input type="text" id="runnerName">
+            </div>
+
+            <div class="EntryGroup">
+                <Label for="radius">Radius (m)</Label>
+                <input type="number" id="radius">
+            </div>
+
+            <div class="EntryGroup">
+                <Label for="startTime">Start Time</Label>
+                <input type="text" id="startTime">
+            </div>
+
+            <div class="EntryGroup">
+                <Label for="endTime">End Time</Label>
+                <input type="text" id="endTime">
+            </div>
+
+            <div class="EntryGroup">
+                <Label for="laps">Number of Laps</Label>
+                <input type="number" id="laps">
+            </div>
+
+            <div class="submit">
+                <button id="submit">Submit</button>
+            </div>
+        </div>
+
+        <div class="reportSection">
+            <h4>Report</h4>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Runner</th>
+                        <th>Speed(Kmph)</th>
+                        <th>Radius</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Duration</th>
+                        <th>Number of Laps</th>
+                    </tr>
+                </thead>
+                <tbody id="reportbody">
+                    
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+
+    const DataBase = []
+    const PLAYGROUND_RADIUS = 10;
+
+    const RunnerName = document.getElementById('runnerName');
+    const Radius = document.getElementById('radius');
+    const StartTime = document.getElementById('startTime');
+    const EndTime = document.getElementById('endTime');
+    const Laps = document.getElementById('laps');
+    const Submitbtn = document.getElementById('submit');
+    const ReportBody = document.getElementById('reportbody');
+
+    Submitbtn.onclick = ()=>{
+        const R = Number(Radius.value);
+
+        if(R <= PLAYGROUND_RADIUS){
+            const L = Number(Laps.value);
+            const ST = Number(StartTime.value);
+            const ET = Number(EndTime.value);
+            
+            const Distance = (Math.PI *( R * R)) * L;
+            const Duration = ET - ST;
+        
+            const Speed = (Distance/Duration).toFixed(2);
+
+            DataBase.push({
+                runner:RunnerName.value,
+                speed:`${Speed}Kmph`,
+                radius:`${R}m`,
+                stime:ST,
+                etime:ET,
+                duration:Duration,
+                laps:L
+            });
+
+            MakeReport(DataBase,ReportBody);
+        }else{
+            alert(`${R} is Larger than to ${PLAYGROUND_RADIUS}`);
+        }
+            
+    }
+
+    
+    function MakeReport(data,parentElement){
+        let html = "";
+        data.forEach(row => {
+            if(row['runner']){
+                html += `<tr>
+                            <td>${row['runner']}</td>
+                            <td>${row['speed']}</td>
+                            <td>${row['radius']}</td>
+                            <td>${row['stime']}</td>
+                            <td>${row['etime']}</td>
+                            <td>${row['duration']}</td>
+                            <td>${row['laps']}</td>
+                        </tr>`;
+            }
+        });
+        parentElement.innerHTML = html;
+    }
+    window.location.reload()
+</script>
+</html>
